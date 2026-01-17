@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление книги{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">⚠️ Подтверждение удаления</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-trash display-1 text-danger"></i>
+                </div>
+                
+                <h3 class="mb-3">Вы уверены, что хотите удалить эту книгу?</h3>
+                
+                <div class="alert alert-warning text-start">
+                    <h5>📖 {{ book.title }}</h5>
+                    <hr>
+                    <p><strong>ID:</strong> {{ book.book_id }}</p>
+                    <p><strong>Авторы:</strong> {{ book.author_names }}</p>
+                    <p><strong>Издатель:</strong> 
+                        {% if book.publisher %}
+                            {{ book.publisher.publisher_name }}
+                        {% else %}
+                            Не указан
+                        {% endif %}
+                    </p>
+                    <p><strong>Рейтинг:</strong> 
+                        {% if book.rating %}
+                            {{ book.rating.average_rating|floatformat(2) }} ★
+                        {% else %}
+                            Нет
+                        {% endif %}
+                    </p>
+                    <p><strong>Дата публикации:</strong> 
+                        {% if book.publication_date %}
+                            {{ book.publication_date|date("d.m.Y") }}
+                        {% else %}
+                            Не указана
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <strong>⚠️ Внимание!</strong> Это действие нельзя отменить.
+                </div>
+                
+                <form method="post" class="mt-4">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{{ url('book_list') }}" class="btn btn-secondary btn-lg">
+                            ✖ Отмена
+                        </a>
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            🗑️ Да, удалить книгу
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

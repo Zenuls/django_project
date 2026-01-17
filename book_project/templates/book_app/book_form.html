@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Редактирование книги
+    {% else %}
+        Добавление книги
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header 
+                {% if form.instance.pk %}
+                    bg-warning
+                {% else %}
+                    bg-success
+                {% endif %} text-white">
+                <h4 class="mb-0">
+                    {% if form.instance.pk %}
+                        ✏️ Редактирование книги
+                    {% else %}
+                        ➕ Добавление новой книги
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    
+                    {% if form.non_field_errors() %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors() %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row g-3">
+                        
+                        <div class="col-12">
+                            <label for="id_title" class="form-label">Название *</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="col-12">
+                            <label for="id_authors" class="form-label">Авторы</label>
+                            {{ form.authors }}
+                            {% if form.authors.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.authors.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">Выберите одного или нескольких авторов (Ctrl+Click)</div>
+                        </div>
+                        
+                        
+                        <div class="col-md-4">
+                            <label for="id_average_rating" class="form-label">Средний рейтинг *</label>
+                            {{ form.average_rating }}
+                            {% if form.average_rating.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.average_rating.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">0-5</div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="id_ratings_count" class="form-label">Количество оценок *</label>
+                            {{ form.ratings_count }}
+                            {% if form.ratings_count.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.ratings_count.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="id_text_reviews_count" class="form-label">Количество отзывов *</label>
+                            {{ form.text_reviews_count }}
+                            {% if form.text_reviews_count.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.text_reviews_count.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="col-md-6">
+                            <label for="id_publisher" class="form-label">Издатель</label>
+                            {{ form.publisher }}
+                            {% if form.publisher.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.publisher.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="col-md-6">
+                            <label for="id_language" class="form-label">Язык</label>
+                            {{ form.language }}
+                            {% if form.language.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.language.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="col-md-6">
+                            <label for="id_num_pages" class="form-label">Количество страниц</label>
+                            {{ form.num_pages }}
+                            {% if form.num_pages.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.num_pages.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        <div class="col-md-6">
+                            <label for="id_publication_date" class="form-label">Дата публикации</label>
+                            {{ form.publication_date }}
+                            {% if form.publication_date.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.publication_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-top">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url('book_list') }}" class="btn btn-secondary">
+                                ← Отмена
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                {% if form.instance.pk %}
+                                    💾 Сохранить изменения
+                                {% else %}
+                                    ➕ Добавить книгу
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        if (!input.classList.contains('form-control') && 
+            input.type !== 'checkbox' && 
+            input.type !== 'radio') {
+            input.classList.add('form-control');
+        }
+    });
+    
+    
+    const ratingInput = document.getElementById('id_average_rating');
+    if (ratingInput) {
+        ratingInput.addEventListener('change', function() {
+            const value = parseFloat(this.value);
+            if (value < 0 || value > 5) {
+                this.setCustomValidity('Рейтинг должен быть от 0 до 5');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% macro book_table(books, show_actions=true) %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Авторы</th>
+                <th>Издатель</th>
+                <th>Рейтинг</th>
+                <th>Страниц</th>
+                {% if show_actions %}
+                <th>Действия</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.book_id }}</td>
+                <td>{{ book.title|truncatechars(50) }}</td>
+                <td>{{ book.author_names|truncatechars(40) }}</td>
+                <td>
+                    {% if book.publisher %}
+                        {{ book.publisher.publisher_name|truncatechars(30) }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    {% if book.rating %}
+                        {{ book.rating.average_rating|floatformat(2) }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ book.num_pages|default("—") }}</td>
+                
+                {% if show_actions %}
+                <td>
+                    <a href="{{ url('book_update', book.pk) }}" class="btn btn-sm btn-warning">✏️</a>
+                    <a href="{{ url('book_delete', book.pk) }}" class="btn btn-sm btn-danger">🗑️</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endmacro %}
+
+{% macro author_table(authors) %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя автора</th>
+                <th>Количество книг</th>
+                <th>Средний рейтинг</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for author in authors %}
+            <tr>
+                <td>{{ author.author_id }}</td>
+                <td>{{ author.author_name }}</td>
+                <td>{{ author.book_count|default(0) }}</td>
+                <td>{{ author.avg_rating|floatformat(2)|default("—") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endmacro %}
+
+{% macro publisher_table(publishers) %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название издателя</th>
+                <th>Количество книг</th>
+                <th>Средний рейтинг</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publisher in publishers %}
+            <tr>
+                <td>{{ publisher.publisher_id }}</td>
+                <td>{{ publisher.publisher_name }}</td>
+                <td>{{ publisher.book_count|default(0) }}</td>
+                <td>{{ publisher.avg_rating|floatformat(2)|default("—") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% macro language_table(languages) %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Код</th>
+                <th>Язык</th>
+                <th>Количество книг</th>
+                <th>Средний рейтинг</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for language in languages %}
+            <tr>
+                <td>{{ language.code|upper }}</td>
+                <td>{{ language.language_name }}</td>
+                <td>{{ language.book_count|default(0) }}</td>
+                <td>{{ language.avg_rating|floatformat(2)|default("—") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endmacro %}
+
+{% macro stats_card(title, value, icon_class="bi-graph-up", color_class="primary") %}
+<div class="col-md-3 col-6 mb-3">
+    <div class="card border-{{ color_class }} shadow-sm">
+        <div class="card-body text-center">
+            <i class="bi {{ icon_class }} display-4 text-{{ color_class }} mb-2"></i>
+            <h3 class="card-title">{{ value }}</h3>
+            <p class="card-text text-muted">{{ title }}</p>
+        </div>
+    </div>
+</div>
+{% endmacro %}

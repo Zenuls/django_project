@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% from 'macros/table.html' import book_table, author_table, publisher_table, language_table, stats_card %}
+
+{% block title %}Статистика библиотеки{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">📊 Статистика библиотеки</h1>
+    
+    
+    <div class="row mb-5">
+        {{ stats_card("Всего книг", total_stats.total_books, "bi-book", "primary") }}
+        {{ stats_card("Всего авторов", total_stats.total_authors, "bi-person", "success") }}
+        {{ stats_card("Всего издателей", total_stats.total_publishers, "bi-building", "warning") }}
+        {{ stats_card("Языки", total_stats.total_languages, "bi-globe", "info") }}
+    </div>
+    
+    
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">📚 Книги</h3>
+            <span class="badge bg-light text-dark">{{ books|length }} книг</span>
+        </div>
+        <div class="card-body">
+            {{ book_table(books, show_actions=false) }}
+            
+            
+            {% if books.has_other_pages() %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if books.has_previous() %}
+                    <li class="page-item">
+                        <a class="page-link" href="?books_page={{ books.previous_page_number() }}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                            &laquo; Назад
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Книги: {{ books.number }} из {{ books.paginator.num_pages }}
+                        </span>
+                    </li>
+                    
+                    {% if books.has_next() %}
+                    <li class="page-item">
+                        <a class="page-link" href="?books_page={{ books.next_page_number() }}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                            Вперед &raquo;
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">👥 Авторы</h3>
+                    <span class="badge bg-light text-dark">{{ authors.paginator.count }} авторов</span>
+                </div>
+                <div class="card-body">
+                    {{ author_table(authors) }}
+                    
+                    
+                    {% if authors.has_other_pages() %}
+                    <nav class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if authors.has_previous() %}
+                            <li class="page-item">
+                                <a class="page-link" href="?authors_page={{ authors.previous_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                                    &laquo;
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    {{ authors.number }} / {{ authors.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if authors.has_next() %}
+                            <li class="page-item">
+                                <a class="page-link" href="?authors_page={{ authors.next_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                                    &raquo;
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">🏢 Издатели</h3>
+                    <span class="badge bg-light text-dark">{{ publishers.paginator.count }} издателей</span>
+                </div>
+                <div class="card-body">
+                    {{ publisher_table(publishers) }}
+                    
+                    
+                    {% if publishers.has_other_pages() %}
+                    <nav class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if publishers.has_previous() %}
+                            <li class="page-item">
+                                <a class="page-link" href="?publishers_page={{ publishers.previous_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                                    &laquo;
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    {{ publishers.number }} / {{ publishers.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if publishers.has_next() %}
+                            <li class="page-item">
+                                <a class="page-link" href="?publishers_page={{ publishers.next_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if languages_page %}&languages_page={{ languages_page }}{% endif %}">
+                                    &raquo;
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="card mb-5">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">🌐 Языки</h3>
+            <span class="badge bg-light text-dark">{{ languages.paginator.count }} языков</span>
+        </div>
+        <div class="card-body">
+            {{ language_table(languages) }}
+            
+            
+            {% if languages.has_other_pages() %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if languages.has_previous() %}
+                    <li class="page-item">
+                        <a class="page-link" href="?languages_page={{ languages.previous_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}">
+                            &laquo; Назад
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Языки: {{ languages.number }} из {{ languages.paginator.num_pages }}
+                        </span>
+                    </li>
+                    
+                    {% if languages.has_next() %}
+                    <li class="page-item">
+                        <a class="page-link" href="?languages_page={{ languages.next_page_number() }}{% if books_page %}&books_page={{ books_page }}{% endif %}{% if authors_page %}&authors_page={{ authors_page }}{% endif %}{% if publishers_page %}&publishers_page={{ publishers_page }}{% endif %}">
+                            Вперед &raquo;
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    <div class="row mt-3">
+        <div class="col-md-4">
+            {{ stats_card("Средний рейтинг", overall_stats.avg_rating|floatformat(2) or "0.00", "bi-star", "primary") }}
+        </div>
+        <div class="col-md-4">
+            {{ stats_card("Всего страниц", overall_stats.total_pages or 0, "bi-file-text", "success") }}
+        </div>
+        <div class="col-md-4">
+            {{ stats_card("Среднее кол-во страниц", overall_stats.avg_pages|floatformat(0) or 0, "bi-file-earmark", "warning") }}
+        </div>
+    </div>
+    
+    
+    <div class="text-center mt-4">
+        <a href="{{ url('statistics') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-clockwise"></i> Сбросить все пагинации
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('books_page') || urlParams.has('authors_page') || 
+        urlParams.has('publishers_page') || urlParams.has('languages_page')) {
+        
+        
+        document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
+{% endblock %}

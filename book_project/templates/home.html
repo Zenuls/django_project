@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Добро пожаловать в библиотеку</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Последние книги
+            </div>
+            <div class="card-body">
+                {% if books %}
+                <ul class="list-group">
+                    {% for book in books %}
+                    <li class="list-group-item">
+                        <strong>{{ book.title }}</strong><br>
+                        Авторы: {{ book.author_names }}<br>
+                        Рейтинг: {% if book.rating %}{{ book.rating.average_rating }}{% else %}Нет{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a href="{{ url('book_list') }}" class="btn btn-primary mt-3">Все книги</a>
+                {% else %}
+                <p class="text-muted">Нет книг в базе</p>
+                <a href="{{ url('book_create') }}" class="btn btn-success">Добавить первую книгу</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                Статистика
+            </div>
+            <div class="card-body">
+                <p>Всего книг: <strong>{{ total_books }}</strong></p>
+                <p>Средний рейтинг: <strong>{{ avg_rating|floatformat(2) }}</strong></p>
+                <p>Всего страниц: <strong>{{ total_pages|default(0) }}</strong></p>
+                <p>Всего отзывов: <strong>{{ total_reviews|default(0) }}</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
